@@ -1,3 +1,5 @@
+use crate::expenses::Expenses;
+use crate::fluent_decorator::FluentDecorator;
 use crate::validator::Validator;
 
 pub struct Person {
@@ -7,10 +9,12 @@ pub struct Person {
 }
 
 mod validator;
+mod fluent_decorator;
+mod expenses;
 
 fn main() {
     let person = Person {
-        first_name: "".into(),
+        first_name: "Coucou Mazlum".into(),
         last_name: "".into(),
         civility: "Madrid".into(),
     };
@@ -21,5 +25,22 @@ fn main() {
         .validate(|p| &p.civility, |civility| civility.eq("Paris"), "Civility not in Paris")
         .get_error_messages();
 
+    let turnover: f32 = 100000.0;
+
+    let profit: f32 = FluentDecorator::from(turnover, std::convert::identity)
+        .with(Expenses::get_remuneration)
+        .with(Expenses::get_deductible_taxes)
+        .with(Expenses::get_operating_expenses)
+        .with(Expenses::get_transport_expenses)
+        .with(Expenses::get_exceptional_expenses)
+        .calculate();
+
+    let result_str = FluentDecorator::from(&person.first_name, std::convert::identity)
+        .with(|s| Expenses::transform_str1(&s))
+        .with(|s| Expenses::transform_str2(&s))
+        .calculate();
+
     println!("{result:#?}");
+    println!("{profit:#?}");
+    println!("{result_str:#?}");
 }
