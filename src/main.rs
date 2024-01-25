@@ -1,4 +1,5 @@
 use crate::expenses::Expenses;
+use crate::factory::Factory;
 use crate::fluent_decorator::FluentDecorator;
 use crate::validator::Validator;
 
@@ -8,9 +9,23 @@ pub struct Person {
     pub civility: String,
 }
 
+#[derive(Debug)]
+pub struct Team {
+    pub name: String,
+}
+
+pub struct Psg {
+    team: Team,
+}
+
+pub struct Real {
+    team: Team,
+}
+
 mod validator;
 mod fluent_decorator;
 mod expenses;
+mod factory;
 
 fn main() {
     let person = Person {
@@ -40,7 +55,24 @@ fn main() {
         .with(|s| Expenses::transform_str2(&s))
         .calculate();
 
+    let case1 = "Coucou Mazlum".to_string();
+    let case2 = "Coucou Mazizou".to_string();
+
+    let team = Factory::from_type(&person.first_name)
+        .register(&case1, || get_psg())
+        .register(&case2, || get_real())
+        .get();
+
     println!("{result:#?}");
     println!("{profit:#?}");
     println!("{result_str:#?}");
+    println!("{team:#?}");
+}
+
+pub fn get_psg() -> Team {
+    Psg { team: Team { name: "PSG".into() } }.team
+}
+
+pub fn get_real() -> Team {
+    Real { team: Team { name: "Real".into() } }.team
 }
