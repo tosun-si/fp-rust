@@ -25,6 +25,6 @@ impl<'a, T: Eq + Hash, R> Factory<'a, T, R>
 
 
     pub fn get(self) -> R {
-        self.suppliers.get(self.input_type).expect("Error !!")()
+        self.suppliers.get(self.input_type).expect("No case found in the factory pattern")()
     }
 }

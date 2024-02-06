@@ -22,6 +22,14 @@ pub struct Real {
     team: Team,
 }
 
+pub struct Juve {
+    team: Team,
+}
+
+pub struct Bayern {
+    team: Team,
+}
+
 mod validator;
 mod fluent_decorator;
 mod expenses;
@@ -57,10 +65,14 @@ fn main() {
 
     let case1 = "Coucou Mazlum".to_string();
     let case2 = "Coucou Mazizou".to_string();
+    let case3 = "Coucou Juve".to_string();
+    let case4 = "Coucou Bayern".to_string();
 
     let team = Factory::from_type(&person.first_name)
         .register(&case1, || get_psg())
         .register(&case2, || get_real())
+        .register(&case3, || get_juve())
+        .register(&case4, || get_bayern())
         .get();
 
     println!("{result:#?}");
@@ -75,4 +87,12 @@ pub fn get_psg() -> Team {
 
 pub fn get_real() -> Team {
     Real { team: Team { name: "Real".into() } }.team
+}
+
+pub fn get_juve() -> Team {
+    Juve { team: Team { name: "Juve".into() } }.team
+}
+
+pub fn get_bayern() -> Team {
+    Bayern { team: Team { name: "Bayern".into() } }.team
 }
