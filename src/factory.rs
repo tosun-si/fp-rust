@@ -4,14 +4,16 @@ use std::hash::Hash;
 pub struct Factory<'a, T, R> {
     input_type: &'a T,
     suppliers: HashMap<&'a T, Box<dyn Fn() -> R>>,
+    default_value: Box<dyn Fn() -> R>,
 }
 
 impl<'a, T: Eq + Hash, R> Factory<'a, T, R>
 {
-    pub fn from_type(input_type: &'a T) -> Self {
+    pub fn from_type(input_type: &'a T, default_value: impl Fn() -> R + 'static) -> Self {
         Self {
             input_type,
             suppliers: HashMap::new(),
+            default_value: Box::new(default_value),
         }
     }
 
@@ -25,6 +27,6 @@ impl<'a, T: Eq + Hash, R> Factory<'a, T, R>
 
 
     pub fn get(self) -> R {
-        self.suppliers.get(self.input_type).expect("No case found in the factory pattern")()
+        self.suppliers.get(self.input_type).unwrap_or(&self.default_value)()
     }
 }

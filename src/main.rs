@@ -30,6 +30,10 @@ pub struct Bayern {
     team: Team,
 }
 
+pub struct DefaultTeam {
+    team: Team,
+}
+
 mod validator;
 mod fluent_decorator;
 mod expenses;
@@ -68,7 +72,7 @@ fn main() {
     let case3 = "Coucou Juve".to_string();
     let case4 = "Coucou Bayern".to_string();
 
-    let team = Factory::from_type(&person.first_name)
+    let team = Factory::from_type(&person.first_name, || get_default_team())
         .register(&case1, || get_psg())
         .register(&case2, || get_real())
         .register(&case3, || get_juve())
@@ -95,4 +99,8 @@ pub fn get_juve() -> Team {
 
 pub fn get_bayern() -> Team {
     Bayern { team: Team { name: "Bayern".into() } }.team
+}
+
+pub fn get_default_team() -> Team {
+    DefaultTeam { team: Team { name: "Default".into() } }.team
 }
