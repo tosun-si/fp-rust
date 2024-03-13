@@ -41,7 +41,7 @@ mod factory;
 
 fn main() {
     let person = Person {
-        first_name: "Coucou Mazlum".into(),
+        first_name: "PSG".into(),
         last_name: "".into(),
         civility: "Madrid".into(),
     };
@@ -67,22 +67,37 @@ fn main() {
         .with(|s| Expenses::transform_str2(&s))
         .calculate();
 
-    let case1 = "Coucou Mazlum".to_string();
-    let case2 = "Coucou Mazizou".to_string();
-    let case3 = "Coucou Juve".to_string();
-    let case4 = "Coucou Bayern".to_string();
+    let case1 = "PSG".to_string();
+    let case2 = "Bayern".to_string();
+    let case3 = "Juve".to_string();
+    let case4 = "Bayern".to_string();
 
-    let team = Factory::from_type(&person.first_name, || get_default_team())
+    let team = Factory::from_type(|| get_default_team())
         .register(&case1, || get_psg())
         .register(&case2, || get_real())
         .register(&case3, || get_juve())
         .register(&case4, || get_bayern())
-        .get();
+        .get(&person.first_name);
+
+    let factory = Factory::from_type(|| get_default_team())
+        .register(&case1, get_psg())
+        .register(&case2,  get_real())
+        .register(&case3,  get_juve())
+        .register(&case4,  get_bayern());
+
+    let team_psg = factory.get(&"PSG".to_string());
+    let team_juve = factory.get(&"Juve".to_string());
+    let team_bayern = factory.get(&"Bayern".to_string());
+    let default_team = factory.get(&"Unknown team".to_string());
 
     println!("{result:#?}");
     println!("{profit:#?}");
     println!("{result_str:#?}");
     println!("{team:#?}");
+    println!("{team_psg:#?}");
+    println!("{team_juve:#?}");
+    println!("{team_bayern:#?}");
+    println!("{default_team:#?}");
 }
 
 pub fn get_psg() -> Team {
