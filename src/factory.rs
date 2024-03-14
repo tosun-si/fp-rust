@@ -25,7 +25,7 @@ impl<'a, T: Eq + Hash, R> Factory<'a, T, R>
     }
 
 
-    pub fn get(self,
+    pub fn get(&self,
                input_type: &'a T) -> R {
         self.suppliers.get(input_type).unwrap_or(&self.default_value)()
     }

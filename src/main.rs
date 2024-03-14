@@ -80,10 +80,10 @@ fn main() {
         .get(&person.first_name);
 
     let factory = Factory::from_type(|| get_default_team())
-        .register(&case1, get_psg())
-        .register(&case2,  get_real())
-        .register(&case3,  get_juve())
-        .register(&case4,  get_bayern());
+        .register(&case1, || get_psg())
+        .register(&case2, || get_real())
+        .register(&case3, || get_juve())
+        .register(&case4, || get_bayern());
 
     let team_psg = factory.get(&"PSG".to_string());
     let team_juve = factory.get(&"Juve".to_string());
